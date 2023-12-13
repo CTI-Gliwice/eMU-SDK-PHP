@@ -75,6 +75,21 @@ class DiskEMU {
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
+
+	public function download_file(string $path, string $file) : bool {
+		$file_info = $this->get_file_info($path);
+		if(!$file_info) return false;
+		$content = file_get_contents($file_info['url']);
+		if(!$content) return false;
+		file_put_contents($file, $content);
+		return true;
+	}
+
+	public function get_file_blob(string $path) : string|false {
+		$file_info = $this->get_file_info($path);
+		if(!$file_info) return false;
+		return file_get_contents($file_info['url']);
+	}
 	
 	public function create_file(string $path, string $name, string $content, string $content_type, bool $shared = false, ?string $shared_name = null, ?string $valid_from = null, ?string $valid_until = null) : array|false {
 		$data = ['path' => "$path", 'name' => $name, 'content' => $content, 'content_type' => $content_type];
@@ -88,7 +103,6 @@ class DiskEMU {
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
-
 	public function send_file(string $path, string $name, string $file, bool $shared = false, ?string $shared_name = null, ?string $valid_from = null, ?string $valid_until = null) : array|false {
 		$data = ['path' => "$path", 'name' => $name, 'content' => base64_encode(file_get_contents($file)), 'content_type' => 'base64'];
 		if($shared){
