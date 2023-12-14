@@ -14,7 +14,7 @@ class DiskEMU {
 	private array $last_response_data;
 
 	public function __construct(string $api_url){
-		$this->api_url = $api_url;
+		$this->api_url = "$api_url/public/api/filemanager";
 		$this->request = new Request();
 	}
 
