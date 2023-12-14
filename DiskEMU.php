@@ -116,10 +116,10 @@ class DiskEMU {
 		return $this->get_response_data();
 	}
 
-	public function exists(string $path) : array|false {
+	public function exists(string $path) : bool {
 		$this->set_response($this->request->post("$this->api_url/exists", ['path' => $path]));
 		if($this->get_response_code() != 200) return false;
-		return $this->get_response_data();
+		return ($this->get_response_data()['exists'] ?? 0) == 1;
 	}
 
 	public function get_file_info(string $path) : array|false {
