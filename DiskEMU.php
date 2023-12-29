@@ -6,7 +6,7 @@ use App\Services\Request;
 
 class DiskEMU {
 
-	public string $version = "1.0.0";
+	public string $version = "1.1.0";
 	private string $api_url;
 	private Request $request;
 	private bool $is_logged = false;
@@ -62,7 +62,7 @@ class DiskEMU {
 	}
 
 	public function create_folder(string $path, string $name, bool|null $inherited = null, bool $shared = false, ?string $shared_name = null, ?string $valid_from = null, ?string $valid_until = null, array $permissions = []) : array|false {
-		$data = ['path' => "$path", 'name' => $name];
+		$data = ['path' => $path, 'name' => $name];
 		if(!is_null($inherited)) $data['inherited'] = $inherited;
 		if($shared){
 			$data['shared'] = true;
@@ -91,26 +91,28 @@ class DiskEMU {
 		return file_get_contents($file_info['url']);
 	}
 	
-	public function create_file(string $path, string $name, string $content, string $content_type, bool $shared = false, ?string $shared_name = null, ?string $valid_from = null, ?string $valid_until = null) : array|false {
-		$data = ['path' => "$path", 'name' => $name, 'content' => $content, 'content_type' => $content_type];
+	public function create_file(string $path, string $name, string $content, string $content_type, bool $shared = false, ?string $shared_name = null, ?string $valid_from = null, ?string $valid_until = null, array $permissions = []) : array|false {
+		$data = ['path' => $path, 'name' => $name, 'content' => $content, 'content_type' => $content_type];
 		if($shared){
 			$data['shared'] = true;
 			$data['shared_name'] = $shared_name;
 		}
 		if(!is_null($valid_from)) $data['valid_from'] = $valid_from;
 		if(!is_null($valid_until)) $data['valid_until'] = $valid_until;
+		if(!empty($permissions)) $data['permissions'] = $permissions;
 		$this->set_response($this->request->post("$this->api_url/create_file", $data));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
-	public function send_file(string $path, string $name, string $file, bool $shared = false, ?string $shared_name = null, ?string $valid_from = null, ?string $valid_until = null) : array|false {
-		$data = ['path' => "$path", 'name' => $name, 'content' => base64_encode(file_get_contents($file)), 'content_type' => 'base64'];
+	public function send_file(string $path, string $name, string $file, bool $shared = false, ?string $shared_name = null, ?string $valid_from = null, ?string $valid_until = null, array $permissions = []) : array|false {
+		$data = ['path' => $path, 'name' => $name, 'content' => base64_encode(file_get_contents($file)), 'content_type' => 'base64'];
 		if($shared){
 			$data['shared'] = true;
 			$data['shared_name'] = $shared_name;
 		}
 		if(!is_null($valid_from)) $data['valid_from'] = $valid_from;
 		if(!is_null($valid_until)) $data['valid_until'] = $valid_until;
+		if(!empty($permissions)) $data['permissions'] = $permissions;
 		$this->set_response($this->request->post("$this->api_url/create_file", $data));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
@@ -148,6 +150,42 @@ class DiskEMU {
 
 	public function get_groups() : array|false {
 		$this->set_response($this->request->post("$this->api_url/get_groups"));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
+	}
+
+	public function share(string $path, bool $shared = false, ?string $shared_name = null, ?string $valid_from = null, ?string $valid_until = null) : array|false {
+		$data = ['path' => $path, 'shared' => $shared];
+		if($shared) $data['shared_name'] = $shared_name;
+		if(!is_null($valid_from)) $data['valid_from'] = $valid_from;
+		if(!is_null($valid_until)) $data['valid_until'] = $valid_until;
+		$this->set_response($this->request->post("$this->api_url/share", $data));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
+	}
+
+	public function get_permissions(string $path) : array|false {
+		$this->set_response($this->request->post("$this->api_url/get_permissions", ['path' => $path]));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
+	}
+
+	public function set_permissions(string $path, bool $inherited, array $permissions = []) : array|false {
+		$data = ['path' => $path, 'inherited' => $inherited];
+		if(!empty($permissions)) $data['permissions'] = $permissions;
+		$this->set_response($this->request->post("$this->api_url/set_permissions", $data));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
+	}
+
+	public function set_owner(string $path, ?int $owner_id = null) : array|false {
+		$this->set_response($this->request->post("$this->api_url/set_owner", ['path' => $path, 'owner_id' => $owner_id]));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
+	}
+
+	public function move(string $source, string $destination) : array|false {
+		$this->set_response($this->request->post("$this->api_url/move", ['source' => $source, 'destination' => $destination]));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
