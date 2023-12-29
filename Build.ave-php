@@ -23,13 +23,13 @@
 		return false;
 	}
 
-	if(!$disk->exists("/Wersje do testów/$app_name")){
-		$disk->create_folder("/Wersje do testów", $app_name, true);
+	if(!$disk->exists("/Inne/$app_name")){
+		$disk->create_folder("/Inne", $app_name, true);
 	} else {
-		$items = $disk->get_folder_items("/Wersje do testów/$app_name");
+		$items = $disk->get_folder_items("/Inne/$app_name");
 		foreach($items as $item){
 			if($item['is_directory'] == 0){
-				$disk->delete("/Wersje do testów/$app_name/".$item['name']);
+				$disk->delete("/Inne/$app_name/".$item['name']);
 			}
 		}
 	}
@@ -38,7 +38,7 @@
 
 	$name = pathinfo($zip_name, PATHINFO_BASENAME);
 	$this->ave->echo(" Wgrywanie \"$name\"");
-	$disk->send_file("/Wersje do testów/$app_name", $name, $zip_name);
+	$disk->send_file("/Inne/$app_name", $name, $zip_name);
 
 	$code = $disk->get_response_code();
 
@@ -53,7 +53,7 @@
 				'user_id' => $user_id,
 				'message' => implode("\r\n", [
 					"<b>Nowa wersja do testów $app_name v$version została wydana.</b>",
-					"&lt;Dysk:/Wersje do testów/$app_name&gt;",
+					"&lt;Dysk:/Inne/$app_name&gt;",
 				])
 			], true);
 		}
