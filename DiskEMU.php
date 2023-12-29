@@ -189,6 +189,18 @@ class DiskEMU {
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
+
+	public function copy(string $source, string $destination, bool $with_permissions = true) : array|false {
+		$this->set_response($this->request->post("$this->api_url/copy", ['source' => $source, 'destination' => $destination, 'with_permissions' => $with_permissions]));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
+	}
+
+	public function copy_folder_structure(string $source, string $destination, bool $with_permissions = true) : array|false {
+		$this->set_response($this->request->post("$this->api_url/copy_folder_structure", ['source' => $source, 'destination' => $destination, 'with_permissions' => $with_permissions]));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
+	}
 	
 }
 
