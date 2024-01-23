@@ -58,6 +58,10 @@ class Core {
 		$this->request->setHeader([]);
 		return true;
 	}
+
+	public function getAuth() : array {
+		return $this->request->getHeader();
+	}
 	
 }
 

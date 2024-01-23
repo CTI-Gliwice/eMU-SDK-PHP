@@ -28,6 +28,10 @@ class Request {
 		];
 	}
 
+	public function getHeader() : array {
+		return $this->header;
+	}
+
 	public function setHeader(array $header) : void {
 		$this->header = $header;
 	}
