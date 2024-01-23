@@ -17,6 +17,8 @@ class Core {
 	public function __construct(string $app_url){
 		$this->app_url = "$app_url/public/api";
 		$this->request = new Request();
+		$this->last_response_code = 0;
+		$this->last_response_data = [];
 	}
 
 	public function is_logged() : bool {
