@@ -46,6 +46,10 @@ class Core {
 		return $this->last_response_data;
 	}
 
+	public function auth(string $token) : void {
+		$this->request->setHeader(["Authorization: UserLogonV2 $token"]);
+	}
+
 	public function login(string $login, string $password) : bool {
 		$this->set_response($this->request->post("$this->app_url/login", ['email' => $login, 'password' => $password, 'role' => 'API.EMU']));
 		if($this->get_response_code() != 200) return false;
