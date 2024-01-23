@@ -2,61 +2,19 @@
 
 declare(strict_types=1);
 
-use App\Services\Request;
+namespace eMU\SDK;
 
-class DiskEMU {
+class FileManager extends Core {
 
-	public string $version = "1.1.0";
-	private string $app_url;
-	private Request $request;
-	private bool $is_logged = false;
-	private int $last_response_code = 0;
-	private array $last_response_data;
+	protected string $api_url;
 
 	public function __construct(string $app_url){
-		$this->app_url = "$app_url/public/api/filemanager";
-		$this->request = new Request();
-	}
-
-	public function is_logged() : bool {
-		return $this->is_logged;
-	}
-
-	private function set_response(array $response) : void {
-		$this->last_response_code = $response['code'] ?? 0;
-		$this->last_response_data = $response['data'] ?? [];
-	}
-
-	public function get_error() : string {
-		if($this->last_response_data['error'] ?? false && isset($this->last_response_data['message'])) return $this->last_response_data['message'];
-		return '#'.$this->last_response_code.':'.print_r($this->last_response_data, true);
-	}
-
-	public function get_response_code() : int {
-		return $this->last_response_code;
-	}
-
-	public function get_response_data() : array {
-		return $this->last_response_data;
-	}
-
-	public function login(string $login, string $password) : bool {
-		$this->set_response($this->request->post("$this->app_url/login", ['email' => $login, 'password' => $password]));
-		if($this->get_response_code() != 200) return false;
-		$this->request->setHeader(["Authorization: Bearer ".$this->get_response_data()['token']]);
-		$this->is_logged = true;
-		return true;
-	}
-
-	public function logout() : bool {
-		$this->set_response($this->request->post("$this->app_url/logout"));
-		if($this->get_response_code() != 200) return false;
-		$this->request->setHeader([]);
-		return true;
+		parent::__construct($app_url);
+		$this->api_url = "$this->app_url/emu/filemanager";
 	}
 
 	public function delete(string $path) : array|false {
-		$this->set_response($this->request->post("$this->app_url/delete", ['path' => $path]));
+		$this->set_response($this->request->post("$this->api_url/delete", ['path' => $path]));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
@@ -71,7 +29,7 @@ class DiskEMU {
 		if(!is_null($valid_from)) $data['valid_from'] = $valid_from;
 		if(!is_null($valid_until)) $data['valid_until'] = $valid_until;
 		if(!empty($permissions)) $data['permissions'] = $permissions;
-		$this->set_response($this->request->post("$this->app_url/create_folder", $data));
+		$this->set_response($this->request->post("$this->api_url/create_folder", $data));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
@@ -100,7 +58,7 @@ class DiskEMU {
 		if(!is_null($valid_from)) $data['valid_from'] = $valid_from;
 		if(!is_null($valid_until)) $data['valid_until'] = $valid_until;
 		if(!empty($permissions)) $data['permissions'] = $permissions;
-		$this->set_response($this->request->post("$this->app_url/create_file", $data));
+		$this->set_response($this->request->post("$this->api_url/create_file", $data));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
@@ -113,43 +71,31 @@ class DiskEMU {
 		if(!is_null($valid_from)) $data['valid_from'] = $valid_from;
 		if(!is_null($valid_until)) $data['valid_until'] = $valid_until;
 		if(!empty($permissions)) $data['permissions'] = $permissions;
-		$this->set_response($this->request->post("$this->app_url/create_file", $data));
+		$this->set_response($this->request->post("$this->api_url/create_file", $data));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
 
 	public function exists(string $path) : bool {
-		$this->set_response($this->request->post("$this->app_url/exists", ['path' => $path]));
+		$this->set_response($this->request->post("$this->api_url/exists", ['path' => $path]));
 		if($this->get_response_code() != 200) return false;
 		return ($this->get_response_data()['exists'] ?? 0) == 1;
 	}
 
 	public function get_file_info(string $path) : array|false {
-		$this->set_response($this->request->post("$this->app_url/get_file_info", ['path' => $path]));
+		$this->set_response($this->request->post("$this->api_url/get_file_info", ['path' => $path]));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
 	
 	public function get_folder_items(string $path) : array|false {
-		$this->set_response($this->request->post("$this->app_url/get_folder_items", ['path' => $path]));
+		$this->set_response($this->request->post("$this->api_url/get_folder_items", ['path' => $path]));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
 
 	public function get_tree() : array|false {
-		$this->set_response($this->request->post("$this->app_url/get_tree"));
-		if($this->get_response_code() != 200) return false;
-		return $this->get_response_data();
-	}
-
-	public function get_users() : array|false {
-		$this->set_response($this->request->post("$this->app_url/get_users"));
-		if($this->get_response_code() != 200) return false;
-		return $this->get_response_data();
-	}
-
-	public function get_groups() : array|false {
-		$this->set_response($this->request->post("$this->app_url/get_groups"));
+		$this->set_response($this->request->post("$this->api_url/get_tree"));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
@@ -159,13 +105,13 @@ class DiskEMU {
 		if($shared) $data['shared_name'] = $shared_name;
 		if(!is_null($valid_from)) $data['valid_from'] = $valid_from;
 		if(!is_null($valid_until)) $data['valid_until'] = $valid_until;
-		$this->set_response($this->request->post("$this->app_url/share", $data));
+		$this->set_response($this->request->post("$this->api_url/share", $data));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
 
 	public function get_permissions(string $path) : array|false {
-		$this->set_response($this->request->post("$this->app_url/get_permissions", ['path' => $path]));
+		$this->set_response($this->request->post("$this->api_url/get_permissions", ['path' => $path]));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
@@ -173,31 +119,31 @@ class DiskEMU {
 	public function set_permissions(string $path, bool $inherited, array $permissions = []) : array|false {
 		$data = ['path' => $path, 'inherited' => $inherited];
 		if(!empty($permissions)) $data['permissions'] = $permissions;
-		$this->set_response($this->request->post("$this->app_url/set_permissions", $data));
+		$this->set_response($this->request->post("$this->api_url/set_permissions", $data));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
 
 	public function set_owner(string $path, ?int $owner_id = null) : array|false {
-		$this->set_response($this->request->post("$this->app_url/set_owner", ['path' => $path, 'owner_id' => $owner_id]));
+		$this->set_response($this->request->post("$this->api_url/set_owner", ['path' => $path, 'owner_id' => $owner_id]));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
 
 	public function move(string $source, string $destination) : array|false {
-		$this->set_response($this->request->post("$this->app_url/move", ['source' => $source, 'destination' => $destination]));
+		$this->set_response($this->request->post("$this->api_url/move", ['source' => $source, 'destination' => $destination]));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
 
 	public function copy(string $source, string $destination, bool $with_permissions = true) : array|false {
-		$this->set_response($this->request->post("$this->app_url/copy", ['source' => $source, 'destination' => $destination, 'with_permissions' => $with_permissions]));
+		$this->set_response($this->request->post("$this->api_url/copy", ['source' => $source, 'destination' => $destination, 'with_permissions' => $with_permissions]));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
 
 	public function copy_folder_structure(string $source, string $destination, bool $with_permissions = true) : array|false {
-		$this->set_response($this->request->post("$this->app_url/copy_folder_structure", ['source' => $source, 'destination' => $destination, 'with_permissions' => $with_permissions]));
+		$this->set_response($this->request->post("$this->api_url/copy_folder_structure", ['source' => $source, 'destination' => $destination, 'with_permissions' => $with_permissions]));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
