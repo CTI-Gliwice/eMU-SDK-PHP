@@ -14,8 +14,8 @@ class EmJuJa extends Core {
 		$this->api_url = "$this->app_url/emu/emjuja";
 	}
 
-	public function user_get_messages(int $user_id, int $last_message = 0, bool $fetch_all = false) : array|false {
-		$this->set_response($this->request->post("$this->api_url/user/get_messages", ['user_id' => $user_id, 'last_message' => $last_message, 'fetch_all' => $fetch_all]));
+	public function user_get_messages(int $user_id, int $last_message = 0, bool $fetch_all = false, bool $mark_as_read = false) : array|false {
+		$this->set_response($this->request->post("$this->api_url/user/get_messages", ['user_id' => $user_id, 'last_message' => $last_message, 'fetch_all' => $fetch_all, 'mark_as_read' => $mark_as_read]));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
@@ -34,6 +34,18 @@ class EmJuJa extends Core {
 
 	public function user_delete_conversation(int|array $user_id, ?string $date_from = null, ?string $date_until = null) : array|false {
 		$this->set_response($this->request->post("$this->api_url/user/delete_conversation", ['user_id' => $user_id, 'date_from' => $date_from, 'date_until' => $date_until]));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
+	}
+
+	public function group_get_messages(int $group_id, int $last_message = 0, bool $fetch_all = false, bool $mark_as_read = false) : array|false {
+		$this->set_response($this->request->post("$this->api_url/group/get_messages", ['group_id' => $group_id, 'last_message' => $last_message, 'fetch_all' => $fetch_all, 'mark_as_read' => $mark_as_read]));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
+	}
+
+	public function group_list(?string $search = null, bool $only_owned = false) : array|false {
+		$this->set_response($this->request->post("$this->api_url/group/list", ['search' => $search, 'only_owned' => $only_owned]));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}

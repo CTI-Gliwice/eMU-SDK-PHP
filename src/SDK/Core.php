@@ -12,13 +12,11 @@ class Core {
 	protected Request $request;
 	protected bool $is_logged = false;
 	protected int $last_response_code = 0;
-	protected array $last_response_data;
+	protected array $last_response_data = [];
 
 	public function __construct(string $app_url){
 		$this->app_url = "$app_url/public/api";
 		$this->request = new Request();
-		$this->last_response_code = 0;
-		$this->last_response_data = [];
 	}
 
 	public function is_logged() : bool {
