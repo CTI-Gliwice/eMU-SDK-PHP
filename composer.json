@@ -1,5 +1,5 @@
 {
-    "name": "abyssmorgancti/emu-sdk-php",
+    "name": "cti-gliwice/emu-sdk-php",
     "description": "eMU SDK PHP",
     "type": "library",
     "require": {
@@ -17,6 +17,5 @@
             "email": "pawelprzespolewski@cti.org.pl"
         }
     ],
-    "minimum-stability": "dev",
-    "require": {}
+    "minimum-stability": "dev"
 }
