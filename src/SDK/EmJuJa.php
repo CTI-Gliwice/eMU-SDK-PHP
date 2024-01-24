@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace eMU\SDK;
 
+use eMU\Schema\Avatar;
+use eMU\Schema\DataTransfer;
+
 class EmJuJa extends Core {
 
 	protected string $api_url;
@@ -20,8 +23,10 @@ class EmJuJa extends Core {
 		return $this->get_response_data();
 	}
 
-	public function user_send_message(int $user_id, string $message, array $files = []) : array|false {
-		$this->set_response($this->request->post("$this->api_url/user/send_message", ['user_id' => $user_id, 'message' => $message, 'files' => $files]));
+	public function user_send_message(int $user_id, string $message, ?DataTransfer $files = null) : array|false {
+		$data = ['user_id' => $user_id, 'message' => $message];
+		if(!is_null($files)) $data = array_merge($data, $files->getRequest());
+		$this->set_response($this->request->post("$this->api_url/user/send_message", $data));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
@@ -44,26 +49,64 @@ class EmJuJa extends Core {
 		return $this->get_response_data();
 	}
 
+	public function group_send_message(int $group_id, string $message, ?DataTransfer $files = null) : array|false {
+		$data = ['group_id' => $group_id, 'message' => $message];
+		if(!is_null($files)) $data = array_merge($data, $files->getRequest());
+		$this->set_response($this->request->post("$this->api_url/group/send_message", $data));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
+	}
+
+	public function group_delete_message(int|array $message_id) : array|false {
+		$this->set_response($this->request->post("$this->api_url/group/delete_message", ['message_id' => $message_id]));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
+	}
+
+	public function group_delete_conversation(int|array $group_id, ?string $date_from = null, ?string $date_until = null) : array|false {
+		$this->set_response($this->request->post("$this->api_url/group/delete_conversation", ['group_id' => $group_id, 'date_from' => $date_from, 'date_until' => $date_until]));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
+	}
+
 	public function group_list(?string $search = null, bool $only_owned = false) : array|false {
 		$this->set_response($this->request->post("$this->api_url/group/list", ['search' => $search, 'only_owned' => $only_owned]));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
 
-	public function push_file_from_path(array &$files, string $file_name, string $path) : bool {
-		if(!file_exists($path)) return false;
-		array_push($files, [
-			'name' => $file_name,
-			'content' => base64_encode(file_get_contents($path)),
-		]);
-		return true;
+	public function group_get(int $group_id) : array|false {
+		$this->set_response($this->request->post("$this->api_url/group/get", ['group_id' => $group_id]));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
 	}
 
-	public function push_file_from_string(array &$files, string $file_name, string $content) : void {
-		array_push($files, [
-			'name' => $file_name,
-			'content' => base64_encode($content),
-		]);
+	public function group_create(string $name, string $color, array $users_in_group, bool $restricted = false, ?Avatar $avatar = null) : array|false {
+		$data = ['name' => $name, 'color' => $color, 'users_in_group' => $users_in_group, 'restricted' => $restricted];
+		if(!is_null($avatar)) $data = array_merge($data, $avatar->getRequest());
+		$this->set_response($this->request->post("$this->api_url/group/editor", $data));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
+	}
+
+	public function group_edit(int $id, string $name, string $color, array $users_in_group, bool $restricted = false, ?Avatar $avatar = null) : array|false {
+		$data = ['id' => $id, 'name' => $name, 'color' => $color, 'users_in_group' => $users_in_group, 'restricted' => $restricted];
+		if(!is_null($avatar)) $data = array_merge($data, $avatar->getRequest());
+		$this->set_response($this->request->post("$this->api_url/group/editor", $data));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
+	}
+
+	public function group_delete(int $group_id) : array|false {
+		$this->set_response($this->request->post("$this->api_url/group/delete", ['group_id' => $group_id]));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
+	}
+
+	public function group_leave(int $group_id) : array|false {
+		$this->set_response($this->request->post("$this->api_url/group/leave", ['group_id' => $group_id]));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
 	}
 
 }
