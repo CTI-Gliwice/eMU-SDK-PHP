@@ -14,6 +14,6 @@
             "email": "72556823+AbyssMorganCTI@users.noreply.github.com"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require": {}
 }
