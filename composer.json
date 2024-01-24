@@ -2,6 +2,9 @@
     "name": "abyssmorgancti/emu-sdk-php",
     "description": "eMU SDK PHP",
     "type": "library",
+    "require": {
+        "php": ">=8.1"
+    },
     "license": "GPL",
     "autoload": {
         "psr-4": {
@@ -11,7 +14,7 @@
     "authors": [
         {
             "name": "Paweł Przespolewski",
-            "email": "72556823+AbyssMorganCTI@users.noreply.github.com"
+            "email": "pawelprzespolewski@cti.org.pl"
         }
     ],
     "minimum-stability": "dev",
