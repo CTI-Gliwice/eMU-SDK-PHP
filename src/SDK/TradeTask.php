@@ -6,7 +6,7 @@ namespace eMU\SDK;
 
 use eMU\Traits\ElementEditor;
 
-class Task extends Core {
+class TradeTask extends Core {
 
 	use ElementEditor;
 	
@@ -15,7 +15,7 @@ class Task extends Core {
 	public function __construct(string $app_url, ?array $auth = null){
 		parent::__construct($app_url);
 		if(!is_null($auth)) $this->request->setHeader($auth);
-		$this->api_url = "$this->app_url/emu/task";
+		$this->api_url = "$this->app_url/emu/tradetask";
 	}
 
 }

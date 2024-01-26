@@ -81,6 +81,12 @@ class Core {
 		return $this->get_response_data()['device_id'] ?? false;
 	}
 
+	public function get_available_modules(string $format = 'full') : array|false {
+		$this->set_response($this->request->get("$this->app_url/get_available_modules", ['format' => $format]));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
+	}
+
 	public function get_status_list(string $status_element_type, int $status_element_final) : array|false {
 		$this->set_response($this->request->get("$this->app_url/get_status_list", ['type' => $status_element_type, 'is_final' => $status_element_final]));
 		if($this->get_response_code() != 200) return false;
