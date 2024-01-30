@@ -7,7 +7,7 @@ namespace eMU\SDK;
 use Exception;
 use eMU\Traits\ElementEditor;
 
-class Order extends Core {
+class TradeOrder extends Core {
 
 	use ElementEditor;
 	
@@ -16,7 +16,7 @@ class Order extends Core {
 	public function __construct(string $app_url, ?array $auth = null){
 		parent::__construct($app_url);
 		if(!is_null($auth)) $this->request->setHeader($auth);
-		$this->api_url = "$this->app_url/emu/order";
+		$this->api_url = "$this->app_url/emu/tradeorder";
 	}
 
 	public function open(int $id) : array|false {
