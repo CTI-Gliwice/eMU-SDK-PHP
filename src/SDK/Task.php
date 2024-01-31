@@ -5,10 +5,16 @@ declare(strict_types=1);
 namespace eMU\SDK;
 
 use eMU\Traits\ElementEditor;
+use eMU\Traits\AttachmentsEditor;
+use eMU\Traits\MessagesEditor;
+use eMU\Traits\TableQuery;
 
 class Task extends Core {
 
 	use ElementEditor;
+	use AttachmentsEditor;
+	use MessagesEditor;
+	use TableQuery;
 	
 	protected string $api_url;
 

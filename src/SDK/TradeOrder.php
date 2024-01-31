@@ -6,10 +6,16 @@ namespace eMU\SDK;
 
 use Exception;
 use eMU\Traits\ElementEditor;
+use eMU\Traits\AttachmentsEditor;
+use eMU\Traits\MessagesEditor;
+use eMU\Traits\TableQuery;
 
 class TradeOrder extends Core {
 
 	use ElementEditor;
+	use AttachmentsEditor;
+	use MessagesEditor;
+	use TableQuery;
 	
 	protected string $api_url;
 
