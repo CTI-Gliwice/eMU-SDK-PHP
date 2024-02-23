@@ -20,12 +20,12 @@ class OrderServicePart extends Core {
 	}
 
 	/**
-	 * @deprecated "Operacja restore nie jest obsługiwany dla tego typu elementu"
+	 * @deprecated "Operacja restore nie jest obsługiwana dla tego typu elementu"
 	 *
 	 * @return $this
 	 */
 	public function restore(int $id) : array|false {
-		throw new Exception("Operacja ".static::class."::restore nie jest obsługiwany dla tego typu elementu");
+		throw new Exception("Operacja ".static::class."::restore nie jest obsługiwana dla tego typu elementu");
 	}
 
 	public function list(int $order_id = null) : array|false {

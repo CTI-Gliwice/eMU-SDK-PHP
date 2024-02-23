@@ -38,21 +38,21 @@ class TradeOrder extends Core {
 	}
 
 	/**
-	 * @deprecated "Operacja delete nie jest obsługiwany dla tego typu elementu"
+	 * @deprecated "Operacja delete nie jest obsługiwana dla tego typu elementu"
 	 *
 	 * @return $this
 	 */
 	public function delete(int $id) : array|false {
-		throw new Exception("Operacja ".static::class."::delete nie jest obsługiwany dla tego typu elementu");
+		throw new Exception("Operacja ".static::class."::delete nie jest obsługiwana dla tego typu elementu");
 	}
 
 	/**
-	 * @deprecated "Operacja restore nie jest obsługiwany dla tego typu elementu"
+	 * @deprecated "Operacja restore nie jest obsługiwana dla tego typu elementu"
 	 *
 	 * @return $this
 	 */
 	public function restore(int $id) : array|false {
-		throw new Exception("Operacja ".static::class."::restore nie jest obsługiwany dla tego typu elementu");
+		throw new Exception("Operacja ".static::class."::restore nie jest obsługiwana dla tego typu elementu");
 	}
 
 }
