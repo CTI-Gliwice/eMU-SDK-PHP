@@ -15,7 +15,7 @@ class Core {
 	protected array $last_response_data = [];
 
 	public function __construct(string $app_url){
-		$this->app_url = "$app_url/public/api";
+		$this->app_url = "$app_url/api";
 		$this->request = new Request();
 	}
 
@@ -93,7 +93,7 @@ class Core {
 		return $this->get_response_data();
 	}
 
-	public function getAuth() : array {
+	public function get_auth() : array {
 		return $this->request->getHeader();
 	}
 	
