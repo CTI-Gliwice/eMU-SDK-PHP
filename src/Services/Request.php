@@ -10,38 +10,51 @@ class Request {
 	private bool $cookies;
 	private array $header;
 	private array $options;
+	private string $cookie_file;
 
-	public int $version = 10200;
-
-	public function __construct(bool $json = true, bool $cookies = false, array $header = []){
+	public function __construct(bool $json = true, array $header = [], ?array $options = null){
 		$this->json = $json;
-		$this->cookies = $cookies;
+		$this->cookies = false;
+		$this->cookie_file = 'AVE-COOKIE.txt';
 		$this->header = $header;
-		$this->options = [
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_ENCODING => '',
-			CURLOPT_MAXREDIRS => 10,
-			CURLOPT_TIMEOUT => 120,
-			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-			CURLOPT_SSL_VERIFYHOST => false,
-			CURLOPT_SSL_VERIFYPEER => false,
-			CURLOPT_USERAGENT => 'eMU-SDK-PHP',
-		];
+		if(is_null($options)){
+			$this->options = [
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING => '',
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 120,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_SSL_VERIFYHOST => false,
+				CURLOPT_SSL_VERIFYPEER => false,
+				CURLOPT_USERAGENT => 'AVE-PHP',
+			];
+		} else {
+			$this->options = $options;
+		}
 	}
 
-	public function getHeader() : array {
+	public function toggle_cookie(bool $toggle, string $file = 'AVE-COOKIE.txt') : void {
+		$this->cookies = $toggle;
+		$this->cookie_file = $file;
+	}
+
+	public function get_cookie_file() : string {
+		return $this->cookie_file;
+	}
+
+	public function get_header() : array {
 		return $this->header;
 	}
-
-	public function setHeader(array $header) : void {
+	
+	public function set_header(array $header) : void {
 		$this->header = $header;
 	}
 
-	public function setOptions(array $options) : void {
+	public function set_options(array $options) : void {
 		$this->options = $options;
 	}
 
-	public function setOption(int $option, mixed $value) : void {
+	public function set_option(int $option, mixed $value) : void {
 		$this->options[$option] = $value;
 	}
 
@@ -49,8 +62,36 @@ class Request {
 		return $this->request($url, 'GET', $data, $follow);
 	}
 
+	public function head(string $url, array $data = [], bool $follow = false) : array {
+		return $this->request($url, 'HEAD', $data, $follow);
+	}
+
 	public function post(string $url, array $data = [], bool $follow = false) : array {
 		return $this->request($url, 'POST', $data, $follow);
+	}
+
+	public function put(string $url, array $data = [], bool $follow = false) : array {
+		return $this->request($url, 'PUT', $data, $follow);
+	}
+
+	public function delete(string $url, array $data = [], bool $follow = false) : array {
+		return $this->request($url, 'DELETE', $data, $follow);
+	}
+
+	public function connect(string $url, array $data = [], bool $follow = false) : array {
+		return $this->request($url, 'CONNECT', $data, $follow);
+	}
+
+	public function options(string $url, array $data = [], bool $follow = false) : array {
+		return $this->request($url, 'OPTIONS', $data, $follow);
+	}
+
+	public function trace(string $url, array $data = [], bool $follow = false) : array {
+		return $this->request($url, 'TRACE', $data, $follow);
+	}
+
+	public function patch(string $url, array $data = [], bool $follow = false) : array {
+		return $this->request($url, 'PATCH', $data, $follow);
 	}
 
 	private function request(string $url, string $method, array $data, bool $follow) : array {
@@ -66,15 +107,22 @@ class Request {
 		}
 		$curl = curl_init($url.($params ?? ''));
 		$options[CURLOPT_HTTPHEADER] = $this->header;
-		if($this->json) array_push($options[CURLOPT_HTTPHEADER], 'Content-Type: application/json');
+		if($this->json){
+			array_push($options[CURLOPT_HTTPHEADER], 'Content-Type: application/json');
+		}
 		if($this->cookies){
-			$options[CURLOPT_COOKIEFILE] = 'AVE-COOKIE.txt';
-			$options[CURLOPT_COOKIEJAR] = 'AVE-COOKIE.txt';
+			$options[CURLOPT_COOKIEFILE] = $this->cookie_file;
+			$options[CURLOPT_COOKIEJAR] = $this->cookie_file;
 		}
 		curl_setopt_array($curl, $options);
 		$response = curl_exec($curl);
 		curl_close($curl);
-		if(!$response) return ['code' => curl_getinfo($curl, CURLINFO_HTTP_CODE), 'data' => []];
+		if(!$response){
+			return [
+				'code' => curl_getinfo($curl, CURLINFO_HTTP_CODE),
+				'data' => []
+			];
+		}
 		return [
 			'code' => curl_getinfo($curl, CURLINFO_HTTP_CODE),
 			'data' => $this->json ? json_decode($response, true) : $response

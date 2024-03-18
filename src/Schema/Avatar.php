@@ -34,7 +34,7 @@ class Avatar {
 		$this->avatar_reset = false;
 	}
 
-	public function getRequest() : array {
+	public function get_request() : array {
 		return ['avatar_used' => $this->avatar_used, 'avatar_reset' => $this->avatar_reset, 'avatar_data' => $this->avatar_data];
 	}
 

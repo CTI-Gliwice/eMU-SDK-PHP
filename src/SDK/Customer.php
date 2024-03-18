@@ -20,8 +20,14 @@ class Customer extends Core {
 
 	public function __construct(string $app_url, ?array $auth = null){
 		parent::__construct($app_url);
-		if(!is_null($auth)) $this->request->setHeader($auth);
+		if(!is_null($auth)) $this->request->set_header($auth);
 		$this->api_url = "$this->app_url/emu/customer";
+	}
+
+	public function get_by_nip(string $nip){
+		$this->set_response($this->request->post("$this->api_url/get_by_nip", ['nip' => $nip]));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
 	}
 
 }

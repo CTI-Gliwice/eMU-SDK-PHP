@@ -13,7 +13,7 @@ class EmJuJa extends Core {
 
 	public function __construct(string $app_url, ?array $auth = null){
 		parent::__construct($app_url);
-		if(!is_null($auth)) $this->request->setHeader($auth);
+		if(!is_null($auth)) $this->request->set_header($auth);
 		$this->api_url = "$this->app_url/emu/emjuja";
 	}
 
@@ -25,7 +25,7 @@ class EmJuJa extends Core {
 
 	public function user_send_message(int $user_id, string $message, ?DataTransfer $files = null) : array|false {
 		$data = ['user_id' => $user_id, 'message' => $message];
-		if(!is_null($files)) $data = array_merge($data, $files->getRequest());
+		if(!is_null($files)) $data = array_merge($data, $files->get_request());
 		$this->set_response($this->request->post("$this->api_url/user/send_message", $data));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
@@ -51,7 +51,7 @@ class EmJuJa extends Core {
 
 	public function group_send_message(int $group_id, string $message, ?DataTransfer $files = null) : array|false {
 		$data = ['group_id' => $group_id, 'message' => $message];
-		if(!is_null($files)) $data = array_merge($data, $files->getRequest());
+		if(!is_null($files)) $data = array_merge($data, $files->get_request());
 		$this->set_response($this->request->post("$this->api_url/group/send_message", $data));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
@@ -83,7 +83,7 @@ class EmJuJa extends Core {
 
 	public function group_create(string $name, string $color, array $users_in_group, bool $restricted = false, ?Avatar $avatar = null) : array|false {
 		$data = ['name' => $name, 'color' => $color, 'users_in_group' => $users_in_group, 'restricted' => $restricted];
-		if(!is_null($avatar)) $data = array_merge($data, $avatar->getRequest());
+		if(!is_null($avatar)) $data = array_merge($data, $avatar->get_request());
 		$this->set_response($this->request->post("$this->api_url/group/editor", $data));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
@@ -91,7 +91,7 @@ class EmJuJa extends Core {
 
 	public function group_edit(int $id, string $name, string $color, array $users_in_group, bool $restricted = false, ?Avatar $avatar = null) : array|false {
 		$data = ['id' => $id, 'name' => $name, 'color' => $color, 'users_in_group' => $users_in_group, 'restricted' => $restricted];
-		if(!is_null($avatar)) $data = array_merge($data, $avatar->getRequest());
+		if(!is_null($avatar)) $data = array_merge($data, $avatar->get_request());
 		$this->set_response($this->request->post("$this->api_url/group/editor", $data));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();

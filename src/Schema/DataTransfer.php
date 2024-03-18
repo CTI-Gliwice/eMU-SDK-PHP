@@ -28,7 +28,7 @@ class DataTransfer {
 		$this->files = [];
 	}
 
-	public function getRequest() : array {
+	public function get_request() : array {
 		return $this->files;
 	}
 

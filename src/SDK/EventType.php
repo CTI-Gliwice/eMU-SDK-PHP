@@ -10,7 +10,7 @@ class EventType extends Core {
 
 	public function __construct(string $app_url, ?array $auth = null){
 		parent::__construct($app_url);
-		if(!is_null($auth)) $this->request->setHeader($auth);
+		if(!is_null($auth)) $this->request->set_header($auth);
 		$this->api_url = "$this->app_url/emu/event_type";
 	}
 

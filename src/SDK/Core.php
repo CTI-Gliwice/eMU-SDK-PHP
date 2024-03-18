@@ -45,13 +45,13 @@ class Core {
 	}
 
 	public function auth(string $token) : void {
-		$this->request->setHeader(["Authorization: UserLogonV2 $token"]);
+		$this->request->set_header(["Authorization: UserLogonV2 $token"]);
 	}
 
 	public function login(string $login, string $password) : bool {
 		$this->set_response($this->request->post("$this->app_url/login", ['email' => $login, 'password' => $password, 'role' => 'API.EMU']));
 		if($this->get_response_code() != 200) return false;
-		$this->request->setHeader(["Authorization: Bearer ".$this->get_response_data()['token']]);
+		$this->request->set_header(["Authorization: Bearer ".$this->get_response_data()['token']]);
 		$this->is_logged = true;
 		return true;
 	}
@@ -59,7 +59,7 @@ class Core {
 	public function logout() : bool {
 		$this->set_response($this->request->post("$this->app_url/logout"));
 		if($this->get_response_code() != 200) return false;
-		$this->request->setHeader([]);
+		$this->request->set_header([]);
 		return true;
 	}
 
@@ -94,7 +94,7 @@ class Core {
 	}
 
 	public function get_auth() : array {
-		return $this->request->getHeader();
+		return $this->request->get_header();
 	}
 	
 }
