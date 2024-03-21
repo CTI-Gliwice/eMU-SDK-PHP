@@ -69,8 +69,8 @@ class EmJuJa extends Core {
 		return $this->get_response_data();
 	}
 
-	public function group_list(?string $search = null, bool $only_owned = false) : array|false {
-		$this->set_response($this->request->post("$this->api_url/group/list", ['search' => $search, 'only_owned' => $only_owned]));
+	public function group_list(?string $search = null) : array|false {
+		$this->set_response($this->request->post("$this->api_url/group/list", ['search' => $search]));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
