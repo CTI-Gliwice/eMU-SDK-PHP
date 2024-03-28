@@ -69,8 +69,8 @@ class EmJuJa extends Core {
 		return $this->get_response_data();
 	}
 
-	public function group_list(?string $search = null) : array|false {
-		$this->set_response($this->request->post("$this->api_url/group/list", ['search' => $search]));
+	public function group_list(?string $search = null, bool $with_trashed = false) : array|false {
+		$this->set_response($this->request->post("$this->api_url/group/list", ['search' => $search, 'with_trashed' => $with_trashed]));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
@@ -99,6 +99,12 @@ class EmJuJa extends Core {
 
 	public function group_delete(int $group_id) : array|false {
 		$this->set_response($this->request->post("$this->api_url/group/delete", ['group_id' => $group_id]));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
+	}
+
+	public function group_restore(int $group_id) : array|false {
+		$this->set_response($this->request->post("$this->api_url/group/restore", ['group_id' => $group_id]));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}

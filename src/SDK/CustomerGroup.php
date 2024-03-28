@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace eMU\SDK;
 
+use eMU\Traits\SimpleList;
+
 class CustomerGroup extends Core {
+
+	use SimpleList;
 
 	protected string $api_url;
 
@@ -12,12 +16,6 @@ class CustomerGroup extends Core {
 		parent::__construct($app_url);
 		if(!is_null($auth)) $this->request->set_header($auth);
 		$this->api_url = "$this->app_url/emu/customer_group";
-	}
-
-	public function list(?string $search = null, bool $with_trashed = false) : array|false {
-		$this->set_response($this->request->post("$this->api_url/list", ['search' => $search, 'with_trashed' => $with_trashed]));
-		if($this->get_response_code() != 200) return false;
-		return $this->get_response_data();
 	}
 
 }

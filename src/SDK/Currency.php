@@ -6,7 +6,7 @@ namespace eMU\SDK;
 
 use eMU\Traits\SimpleList;
 
-class EventBsfType extends Core {
+class Currency extends Core {
 
 	use SimpleList;
 
@@ -15,7 +15,7 @@ class EventBsfType extends Core {
 	public function __construct(string $app_url, ?array $auth = null){
 		parent::__construct($app_url);
 		if(!is_null($auth)) $this->request->set_header($auth);
-		$this->api_url = "$this->app_url/emu/event_bsf_type";
+		$this->api_url = "$this->app_url/emu/currency";
 	}
 
 }
