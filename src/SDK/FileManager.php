@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace eMU\SDK;
 
+use eMU\Services\Request;
+
 class FileManager extends Core {
 
 	protected string $api_url;
@@ -63,6 +65,39 @@ class FileManager extends Core {
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
+
+	public function allocate_file(string $path, string $name, int $size, bool $shared = false, ?string $shared_name = null, ?string $valid_from = null, ?string $valid_until = null, array $permissions = []) : array|false {
+		$data = ['path' => $path, 'name' => $name, 'size' => $size];
+		if($shared){
+			$data['shared'] = true;
+			$data['shared_name'] = $shared_name;
+		}
+		if(!is_null($valid_from)) $data['valid_from'] = $valid_from;
+		if(!is_null($valid_until)) $data['valid_until'] = $valid_until;
+		if(!empty($permissions)) $data['permissions'] = $permissions;
+		$this->set_response($this->request->post("$this->api_url/allocate_file", $data));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
+	}
+
+	public function send_binary_part(string $path, string $name, string $content, int $offset) : array|false {
+		$length = strlen(bin2hex($content)) / 2;
+		$meta = base64_encode(json_encode(['path' => $path, 'name' => $name, 'offset' => $offset, 'length' => $length]));
+		$transport = new Request(false);
+		$transport->set_header($this->request->get_header());
+		$transport->set_option(CURLOPT_POSTFIELDS, $meta.':AVE_TRANSPORT_DATA_BLOCK:'.$content);
+		$response = $transport->post("$this->api_url/send_binary_part");
+		$this->set_response(['data' => json_decode($response['data'], true), 'code' => $response['code']]);
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
+	}
+
+	public function confirm_binary_file(string $path, string $name) : array|false {
+		$this->set_response($this->request->post("$this->api_url/confirm_binary_file", ['path' => $path, 'name' => $name]));
+		if($this->get_response_code() != 200) return false;
+		return $this->get_response_data();
+	}
+
 	public function send_file(string $path, string $name, string $file, bool $shared = false, ?string $shared_name = null, ?string $valid_from = null, ?string $valid_until = null, array $permissions = []) : array|false {
 		$data = ['path' => $path, 'name' => $name, 'content' => base64_encode(file_get_contents($file)), 'content_type' => 'base64'];
 		if($shared){
