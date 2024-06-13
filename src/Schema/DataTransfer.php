@@ -29,7 +29,7 @@ class DataTransfer {
 	}
 
 	public function get_request() : array {
-		return $this->files;
+		return ['files' => $this->files];
 	}
 
 }

@@ -30,7 +30,7 @@ class OrderServiceOperation extends Core {
 		throw new Exception("Operacja ".static::class."::restore nie jest obsługiwana dla tego typu elementu");
 	}
 
-	public function list(int $order_id = null) : array|false {
+	public function list(int $order_id) : array|false {
 		$this->set_response($this->request->post("$this->api_url/list", ['order_id' => $order_id]));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
