@@ -6,10 +6,12 @@ namespace eMU\SDK;
 
 use eMU\Traits\ElementEditor;
 use eMU\Traits\TableQuery;
+use eMU\Traits\GetFields;
 
 class TaxRate extends Core {
 
 	use ElementEditor;
+	use GetFields;
 	use TableQuery;
 
 	protected string $api_url;

@@ -11,6 +11,7 @@ trait SimpleList {
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
+	
 }
 
 ?>

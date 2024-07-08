@@ -6,10 +6,14 @@ namespace eMU\SDK;
 
 use eMU\Traits\ElementEditor;
 use eMU\Traits\AttachmentsEditor;
+use eMU\Traits\SimpleList;
 use eMU\Traits\TableQuery;
+use eMU\Traits\GetFields;
 
 class Product extends Core {
 
+	use SimpleList;
+	use GetFields;
 	use ElementEditor;
 	use AttachmentsEditor;
 	use TableQuery;

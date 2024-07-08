@@ -7,10 +7,12 @@ namespace eMU\SDK;
 use eMU\Traits\SimpleList;
 use eMU\Traits\ElementEditor;
 use eMU\Traits\TableQuery;
+use eMU\Traits\GetFields;
 
 class UnitOfMeasure extends Core {
 
 	use SimpleList;
+	use GetFields;
 	use ElementEditor;
 	use TableQuery;
 
