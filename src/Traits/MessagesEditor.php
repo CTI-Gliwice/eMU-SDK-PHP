@@ -15,7 +15,9 @@ trait MessagesEditor {
 	}
 
 	public function message_create(int $id, ?string $message, ?MessageImageTransfer $photos = null) : array|false {
-		$this->set_response($this->request->post("$this->api_url/message_create", ['id' => $id, 'message' => $message, 'photos' => $photos->get_request()]));
+		$data = ['id' => $id, 'message' => $message];
+		if(!is_null($photos)) $data['photos'] = $photos->get_request();
+		$this->set_response($this->request->post("$this->api_url/message_create", $data));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
 	}
