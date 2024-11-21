@@ -24,7 +24,7 @@ class Customer extends Core {
 		$this->api_url = "$this->app_url/emu/customer";
 	}
 
-	public function get_by_nip(string $nip){
+	public function get_by_nip(string $nip) : array|bool {
 		$this->set_response($this->request->post("$this->api_url/get_by_nip", ['nip' => $nip]));
 		if($this->get_response_code() != 200) return false;
 		return $this->get_response_data();
