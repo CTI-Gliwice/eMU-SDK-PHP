@@ -6,17 +6,17 @@ namespace eMU\Schema;
 
 abstract class StatusElementType {
 
-	const All = 'all';
-	const Task = 'tasks';
-	const Order = 'orders';
-	const TradeTask = 'trade_tasks';
-	const TradeOrder = 'trade_orders';
-	const Event = 'events';
-	const Project = 'projects';
-	const Offer = 'offers';
-	const SalesOrder = 'sales_orders';
-	const PurchaseOrder = 'purchase_orders';
-	const FileManager = 'disk';
+	public const All = 'all';
+	public const Task = 'tasks';
+	public const Order = 'orders';
+	public const TradeTask = 'trade_tasks';
+	public const TradeOrder = 'trade_orders';
+	public const Event = 'events';
+	public const Project = 'projects';
+	public const Offer = 'offers';
+	public const SalesOrder = 'sales_orders';
+	public const PurchaseOrder = 'purchase_orders';
+	public const FileManager = 'disk';
 
 }
 
