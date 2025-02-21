@@ -6,7 +6,7 @@
 		"**/.git" : true,
 		"**/vendor" : true,
 	},
-	"php.version": "8.1",
+	"php.version": "8.2",
 	"php.problems.exclude": {
 		"/": [7103]
 	}
